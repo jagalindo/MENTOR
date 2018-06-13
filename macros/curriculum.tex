@@ -1,0 +1,195 @@
+% This loads the lua functions files
+
+\newcommand\measurepage{\dimexpr\pagegoal-\pagetotal-\baselineskip\relax}
+
+\newif\ifsimple
+
+\graphicspath{
+	{./documentos/investigacion/transferencia/BeTTy/}
+} 
+
+\makeatletter
+
+
+\newcommand\startitemsall
+{%
+  \begingroup
+  \parindent\z@
+  \@itemdepth\@ne
+  \@totalleftmargin\csname leftmargin\romannumeral\the\@itemdepth\endcsname
+  \leftskip\@totalleftmargin
+  \global\newcount\inumber
+  \parskip\baselineskip  
+  \everypar  
+	 {%
+	 	 	\llap{%
+			\global\advance\inumber by1 \relax 		
+			%\makebox[\labelsep][l] 
+			%{%
+			%	\csname labelitem\romannumeral\the\@itemdepth\endcsname
+			%} 
+			{
+				\the\inumber)	%
+			}%
+		}%
+  	}%
+  	\obeylines
+}
+
+\newcommand\stopitemsall
+{% 
+  \bottom
+  \par\endgroup
+  \vskip\baselineskip 
+}
+
+ 
+\newcommand\startitems
+{%
+  \ifsimple
+  \begingroup
+  \parindent\z@
+  \@itemdepth\@ne
+  \@totalleftmargin\csname leftmargin\romannumeral\the\@itemdepth\endcsname
+  \leftskip\@totalleftmargin
+  \global\newcount\inumber
+  \parskip\baselineskip  
+  \everypar  
+	 {%
+	 	 	\llap{%
+			\global\advance\inumber by1 \relax 		
+			%\makebox[\labelsep][l] 
+			%{%
+			%	\csname labelitem\romannumeral\the\@itemdepth\endcsname
+			%} 
+			{
+				\the\inumber)	%
+			}%
+		}%
+  	}%
+  	\obeylines
+	\fi
+}
+\newcommand\stopitems
+{% 
+  \ifsimple
+  \bottom
+  \par\endgroup
+  \vskip\baselineskip 
+  \fi 
+}
+
+\newcommand\bottom
+{% 
+  \ifsimple
+  \ifnum\@itemdepth>\@ne
+	\down\bottom
+  \fi
+  \fi
+}
+
+\makeatother
+
+
+% this second file loads the funcions that define the pretty printing of the json's
+
+% This defines the tex macros for lua
+\newcommand*{\printPapers}[1]{
+    \directlua{
+        if "#1" == "chapters" then
+            local papers =  utilities.json.tolua(getjsonfile(bookchapters_file))
+            tex.print(printChapters(papers))
+        elseif "#1" == "journals" then
+            local papers =  utilities.json.tolua(getjsonfile(journals_file))
+            tex.print(printJournals(papers))
+        elseif "#1" == "journalsJCR" then
+            local papers =  utilities.json.tolua(getjsonfile(journals_file))
+            tex.print(printJCRJournalsResume(papers))
+        elseif "#1" == "conferences" then
+            local papers =  utilities.json.tolua(getjsonfile(conferences_file))
+            tex.print(printConferences(papers))
+	    elseif "#1" == "plusconferences" then
+            local papers =  utilities.json.tolua(getjsonfile(conferences_file))
+            tex.print(printSCIEConferences(papers))
+	    elseif "#1" == "nonplusconferences" then
+            local papers =  utilities.json.tolua(getjsonfile(conferences_file))
+            tex.print(printNoSCIEConferences(papers))
+        elseif "#1" == "relevants" then
+	        local jpapers =  utilities.json.tolua(getjsonfile(journals_file))
+            local cpapers =  utilities.json.tolua(getjsonfile(conferences_file))	
+            tex.print(printRelevants(jpapers,cpapers))
+        elseif "#1" == "collaborations" then
+	        local jpapers =  utilities.json.tolua(getjsonfile(journals_file))
+            local cpapers =  utilities.json.tolua(getjsonfile(conferences_file))	
+            tex.print(printCollaborations(jpapers,cpapers))
+        elseif "#1" == "editorials" then
+            local papers =  utilities.json.tolua(getjsonfile(editorials_file))
+            tex.print(printJournals(papers))
+        end
+    }
+}
+
+\newcommand*{\printProjects}{
+    \directlua{
+        projects =  utilities.json.tolua(getjsonfile(projects_file))
+        tex.print(printProjects(projects))
+    }
+} 
+
+\newcommand*{\printStays}{
+    \directlua{
+        stays =  utilities.json.tolua(getjsonfile(stays_file))
+        tex.print(printStays(stays))
+    }
+} 
+
+\newcommand*{\printStudies}[1]{
+    \directlua{
+        stays =  utilities.json.tolua(getjsonfile(studies_file))
+        tex.print(printUndergratuatedStudies(stays,"#1"))
+    }
+} 
+\newcommand*{\printFunding}[1]{
+	\directlua{
+		projects =  utilities.json.tolua(getjsonfile(funding_file))
+		tex.print(printFunding(projects,"#1"))
+	}
+}
+
+\newcommand*{\printOthers}[1]{
+	\directlua{
+		local projects =  utilities.json.tolua(getjsonfile(others_file))
+		tex.print(printOthers(projects,"#1"))
+	}
+}
+\newcommand*{\printOthersSimple}[1]{
+	\directlua{
+		local projects = utilities.json.tolua(getjsonfile(others_file))
+		tex.print(printOthersSimple(projects,"#1"))
+	}
+}
+\newcommand*{\printTeaching}{
+	\directlua{
+		local projects =  utilities.json.tolua(getjsonfile(teaching_file))
+		tex.print(printTeaching(projects))
+	}
+}
+\newcommand*{\printTeachingQuality}{
+	\directlua{
+		local projects =  utilities.json.tolua(getjsonfile(teaching_file_quality))
+		tex.print(printTeachingQuality(projects))
+	}
+}
+\newcommand*{\printGroups}{
+	\directlua{
+		local projects =  utilities.json.tolua(getjsonfile(groups_file))
+		tex.print(printGroups(projects))
+	}
+}
+ 
+ 
+\newcommand{\insertpage}[2]{
+	~\\
+	\includegraphics[height=\measurepage-2cm,page=#1,width=\textwidth,keepaspectratio]{#2}
+	
+\clearpage}

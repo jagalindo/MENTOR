@@ -1,0 +1,219 @@
+\RequirePackage{tikz}
+\RequirePackage{url}
+\RequirePackage{xcolor}
+\RequirePackage{datetime}
+%\RequirePackage{hyperref}
+\RequirePackage{printlen}
+\RequirePackage{fp}
+%DESARROLLO:
+\RequirePackage[colorinlistoftodos]{todonotes}
+
+%PRODUCCION: \RequirePackage[disable,colorinlistoftodos]{todonotes}
+\RequirePackage{booktabs} % Professional-like tables. Avoid vertical lines!
+\RequirePackage{eurosym}
+\RequirePackage{fancyhdr}
+
+\RequirePackage{amsfonts} 
+\RequirePackage{amssymb}
+
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{url}
+\RequirePackage{graphicx}
+\RequirePackage{longtable}
+\RequirePackage{titling}
+\RequirePackage{xspace}
+\RequirePackage{multirow}
+\RequirePackage{rotating}
+\RequirePackage{fancyhdr} %for fancy headers
+\RequirePackage{paralist}
+\RequirePackage{fullpage} 
+\RequirePackage{multicol}
+\RequirePackage{amsmath}
+\RequirePackage[spanish]{babel}
+\RequirePackage{xltxtra} 
+
+\RequirePackage[margin=1in,headsep=0.8cm,headheight=1cm]{geometry} %for defining margins
+\RequirePackage[final,enable-survey]{pdfpages} 
+
+\RequirePackage{luacode}
+\RequirePackage{luatextra}
+
+%this is a basic set of functions to load 
+\directlua{dofile("./lua/gazpacho.lua")}
+\directlua{dofile("./lua/functions_print_list.lua")} 
+
+\RequirePackage[plainpages=false,hypertexnames=false]{hyperref} %this should be the last package to be loaded to avoid problems with the references in the PDF page.
+
+\definecolor{ThemeColor1}{cmyk}{0,1,0.65,0.34}
+\definecolor{ThemeColor2}{cmyk}{0,0.08,0.27,0}
+\definecolor{BackgroundColor}{cmyk}{0,0.3,0.94,0}
+
+\setlength{\parskip}{0.25\baselineskip plus2pt minus2pt} %flexible distance between paragraphs
+
+%%
+%% Date formats
+%%
+\newdateformat{monthYear}{\monthname[\THEMONTH] \THEYEAR}
+
+%This is for having subsections numbered with letters instead of numbers as it is in the guidelines of the ANECA paperwork
+\renewcommand{\thesubsection}{\thesection.\Alph{subsection}}
+
+%\usepackage{fontspec}
+\setmainfont{FreeSans}
+%\setmainfont{Gentium}
+
+\renewcommand{\author}[4]{
+\def\documentAuthor{#1}
+\def\documentAuthorEducation{#2}
+\def\documentAuthorTitle{#3}
+\def\documentAuthorID{#4}
+}
+\newcommand{\setTitle}[1]{
+\def\documentTitle{#1}
+}
+\newcommand{\setSubtitle}[1]{
+\def\documentSubtitle{#1}
+}
+\newcommand{\setUniversity}[1]{
+\def\university{#1}
+}
+\newcommand{\setLink}[1]{
+\def\link{#1}
+}
+
+%%
+%% Macro to create the title page
+%% 
+\newcommand{\makeTitlePage}{
+%\pagestyle{title}
+\begin{titlepage}
+\thispagestyle{empty}
+    \vfill    
+    \begin{tikzpicture}[remember picture,overlay]
+    	% Title node
+	\node  [yshift=0.3\paperheight,rectangle,inner sep=20pt,text width=0.8\paperwidth-40pt,minimum height=5cm, text centered,fill=ThemeColor2] (title) at (current page.center)
+          {\parbox{0.7\paperwidth}{\centering \color{ThemeColor1} \normalfont\huge\bfseries\scshape \documentTitle
+          }};
+          % Check if a subtitle is provided
+        \draw[ThemeColor1,line width=0.2cm] (title) ++(-0.4\paperwidth,2.5cm) -- +(0.8\paperwidth,0);
+	\draw[ThemeColor1,line width=0.2cm] (title) ++(-0.4\paperwidth,-2.5cm) -- +(0.8\paperwidth,0);
+          % Author node
+%          \ifthenelse{\equal{#2}{}}{}{
+%         		 {\parbox{0.7\paperwidth}{\centering \color{ThemeColor1} \normalfont\large\bfseries\scshape #2}};
+%	}
+          \node  [anchor=north,yshift=0.3\paperheight-2.5cm-20pt-20pt,inner sep=11pt] (author) at (current page.center)  {\color{ThemeColor1} \textbf{\LARGE\scshape \documentAuthor}};
+          % Supervisor node
+           \node  [anchor=north,yshift=-40pt,inner sep=11pt, text centered] (dissertation) at (author)
+          {\parbox{0.7\paperwidth}{\centering
+           \color{ThemeColor1}
+           %\textbf{\Large Solicitud de Acreditación para Profesor Contratado Doctor}\\
+          \ifx \documentSubtitle \@undefined
+						\relax
+					\else
+						\vspace{0.5cm}\normalfont\Large\bfseries\scshape \documentSubtitle
+					\fi
+					}};
+          % University logo
+          \node [anchor=south,yshift=0.2\paperheight] (logo) at (current page.south){
+              \includegraphics[width=0.25\paperwidth]{style/universidad_sevilla}
+          };
+          \node [anchor=north,yshift=0.2\paperheight] at (current page.south) {\color{ThemeColor1} \textbf{\large \university}};
+          \node [anchor=north,yshift=0.175\paperheight] at (current page.south) {\color{ThemeColor1} \textbf{\large \monthYear\today}};
+          \node [anchor=north,yshift=0.15\paperheight] at (current page.south) {\color{ThemeColor1} \textbf{\large Disponible online en: \url{\link}}};
+   \end{tikzpicture}
+    
+    \vfill
+    \cleardoublepage
+    \disclaimer
+    \cleardoublepage
+%    \supervisorsDeclare
+%    \cleardoublepage
+%    \authorDeclare
+%    \ifthenelse{\equal{\value{committeeMembers}}{0}}{}{
+%    	\cleardoublepage
+%    	\acta
+%    }
+%    \cleardoublepage
+\end{titlepage}
+}
+
+\newcommand{\disclaimer}{
+\thispagestyle{empty}
+\section*{Preámbulo}
+
+%Este documento se ha elaborado en cumplimiento de las recomendaciones establecidas
+%oficialmente en la Ley Orgánica 4/2007 de 12 de Abril, por el que se regula el proceso de acreditación del personal laboral.
+%Contiene la documentación acreditativa de los méritos aportados por el solicitante. Tal y como se
+%recomienda en las instrucciones dadas en la web de la ANECA, la documentación se ha organizado en
+%un único archivo PDF que sigue la misma estructura que el CV para facilitar su consulta a las
+%Comisiones de Acreditación.
+Este documento se ha elaborado en cumplimiento de las recomendaciones establecidas oficialmente en el Real Decreto 1312/2007  de 5 de Octubre y modificado  por el RD 415/2015 de 17 de junio, por el que se regula el acceso a los cuerpos funcionarios docentes universitarios. Contiene la documentación acreditativa de los méritos aportados por el solicitante. Tal y como se recomienda en las instrucciones dadas en la web de la ANECA, la documentación se ha organizado en un único archivo PDF que sigue la misma estructura que el CV para facilitar su consulta a las Comisiones de Acreditación. \\
+}
+
+\newsavebox{\pubContent}
+\newlength{\pdfoffset}
+\newlength{\pdfheight}
+\setlength{\pdfoffset}{0pt}
+\setlength{\pdfheight}{0pt}
+
+\newcommand{\merito}[4]
+{
+\parindent=0pt
+\savebox{\pubContent}{\vbox{#1}}
+\setlength{\pdfoffset}{\ht\pubContent}
+\setlength{\pdfheight}{\textheight - \ht\pubContent - 1.5\baselineskip}
+\FPeval\pdfscale{0.9*(\number\pdfheight/\number\textheight)}
+\usebox{\pubContent}
+\begin{center}
+\ifthenelse{\equal{#2}{}}
+{\includegraphics[page={1}, height=\pdfheight]{#4}}
+{\includegraphics[page={#2}, height=\pdfheight]{#4}}
+\end{center}
+\newpage
+\ifthenelse{\equal{#3}{}}{} % Just in case a second page is needed
+{\addpdf{pages={#3}, height=\textheight, pagecommand={}}{#4}}
+\clearpage
+}
+\newcommand{\nmerito}[4]{\merito{#1}{#2}{#3}{#4}}
+
+\newcommand{\online}[1]{\noindent Disponible online: \url{#1}}
+
+\newcommand{\todomerito}[6]
+{
+\parindent=0pt
+\savebox{\pubContent}{\vbox{#1\ifthenelse{\equal{#5}{}}{\relax}{\par\noindent Disponible online: \url{#5}}\ifthenelse{\equal{#6}{}}{\relax}{\par\noindent\todo[noline,inline]{#6}}}}
+\setlength{\pdfoffset}{\ht\pubContent}
+\setlength{\pdfheight}{\textheight - \ht\pubContent - \baselineskip}
+\FPeval\pdfscale{0.9*(\number\pdfheight/\number\textheight)}
+\usebox{\pubContent}
+
+\ifthenelse{\equal{#4}{}}
+{\missingfigure[figwidth=\textwidth]{Falta justificante}}
+{
+\begin{center}
+\ifthenelse{\equal{#2}{}}
+{\includegraphics[page={1}, height=\pdfheight]{#4}}
+{\includegraphics[page={#2}, height=\pdfheight]{#4}}
+\end{center}
+\newpage
+\ifthenelse{\equal{#3}{}}{} % Just in case a second page is needed
+{\addpdf{pages={#3}, height=\textheight, pagecommand={}}{#4}}
+}
+\clearpage
+}
+\newcommand{\ntodomerito}[5]{\todomerito{#1}{#2}{#3}{#4}{}{#5}}
+
+\fancypagestyle{indexstyle}{%
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{meritosstyle}{%
+\fancyhf{}
+\fancyhead[RE,LO]{Sección \thesubsubsection \sectionmark}
+\fancyhead[LE,RO]{\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{0pt}
+}

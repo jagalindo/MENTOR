@@ -1,0 +1,34 @@
+%! TEX program = lualatex
+\documentclass[10pt,twoside,titlepage,arial,narrow]{style/acreditacion}
+\usepackage{style/acreditacion}
+
+\input{macros/curriculum} 
+\simplefalse %false = Ill generate with pdfs
+%\simpletrue %false = I wont generate with pdfs
+
+\begin{document}
+%-------------------------------------------------------------
+%---------------------------FRONTPAGE-------------------------
+%-------------------------------------------------------------
+ 
+\author{José Ángel Galindo Duarte}{}{}{}
+\setTitle{Documentación Acreditativa de los Méritos \\ Aportados para el Concurso \\ a Ayudante Doctor}
+\setSubtitle{Area de lenguajes y sistemas informáticos}
+\setUniversity{Universidad de Sevilla}
+\setLink{https://hdvirtual.us.es/discovirt/index.php/s/qCQ1XPA7DGkfCiI}
+\makeTitlePage
+\cleardoublepage
+ 
+\pagenumbering{arabic}
+\pagestyle{indexstyle}
+
+% TOC 
+\tableofcontents \cleardoublepage	
+ 
+\pagestyle{meritosstyle}
+  
+%\input{calls/US-1-psi/home}
+\input{calls/US-2-aydr/home}
+%\input{calls/ANECA-4-cu/home}
+
+\end{document}
