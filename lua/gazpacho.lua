@@ -91,7 +91,8 @@ require ("epdf")
     '/documentos/experiencia_profesional/',
     '/documentos/gestion/',
     '/documentos/otros/',
-    '/documentos/dni/'
+    '/documentos/dni/',
+    '/documentos/'
 }
 
 rep, write = string.rep, tex.print
